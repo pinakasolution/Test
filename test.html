@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quotation Form</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f0f4f8;
+      margin: 0;
+      padding: 30px;
+      color: #333;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      position: relative;
+    }
+
+    .a4 {
+      width: 210mm;
+      min-height: 297mm;
+      margin: auto;
+      background: #fff;
+      box-shadow: none;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;          
+      align-items: flex-start;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #eee;
+      padding-bottom: 15px;
+      gap: 30px;
+    }
+
+    .logo img {
+      max-height: 80px;
+    }
+
+    .company {
+      text-align: right;                     
+    }
+
+    .company h2 {
+      margin: 0 0 10px 0;
+      font-size: 24px;
+      color: #2c3e50;
+    }
+
+    .company p {
+      margin: 5px 0;
+      font-size: 14px;
+      color: #555;
+      line-height: 1.5;
+    }
+
+    .project-heading {
+      text-align: center;
+      margin: 40px 0 20px 0;
+      font-size: 28px;
+      font-weight: bold;
+      color: #2c3e50;
+      min-height: 40px;
+    }
+
+    .project-section {
+      text-align: center;
+      margin: 20px 0 50px 0;
+    }
+
+    .project-section label {
+      font-size: 18px;
+      font-weight: 600;
+      display: block;
+      margin-bottom: 12px;
+      color: #444;
+    }
+
+    .project-section input {
+      width: 60%;
+      max-width: 500px;
+      padding: 14px;
+      font-size: 18px;
+      text-align: center;
+      border: 2px solid #0bbcd6;
+      border-radius: 10px;
+    }
+
+    .project-section input:focus {
+      border-color: #09a8c1;
+      box-shadow: 0 0 0 4px rgba(11,188,214,0.2);
+      outline: none;
+    }
+
+    .add-section {
+      position: relative;
+      text-align: left;
+      margin: 40px 0;
+    }
+
+    .add-btn {
+      background: #0bbcd6;
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(11,188,214,0.3);
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .add-btn:hover {
+      background: #09a8c1;
+      transform: translateY(-2px);
+    }
+
+    .add-btn::after {
+      content: "▼";
+      font-size: 12px;
+      transition: transform 0.3s;
+    }
+
+    .add-btn.active::after {
+      transform: rotate(180deg);
+    }
+
+    .dropdown {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      padding: 15px;
+      z-index: 10;
+      min-width: 300px;
+      max-width: 600px;
+      display: none;
+    }
+
+    .dropdown.active {
+      display: block;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 10px;
+    }
+
+    .product-card {
+      background: #f8fbff;
+      border: 1px solid #e0eafc;
+      padding: 16px;
+      border-radius: 8px;
+      text-align: center;
+      font-weight: 600;
+      font-size: 15px;
+      color: #2c3e50;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .product-card:hover {
+      background: #e6f4ff;
+      border-color: #0bbcd6;
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(11,188,214,0.2);
+    }
+
+    .forms-area {
+      margin-top: 30px;
+    }
+
+    .form-box {
+      background: #f9fbfc;
+      border: 1px solid #dce8f0;
+      border-radius: 12px;
+      padding: 25px;
+      margin-bottom: 40px; 
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      position: relative;
+      z-index: 1; 
+    }
+
+    .form-box h3 {
+      margin-top: 0;
+      color: #0bbcd6;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 10px;
+      position: relative;
+    }
+
+    .delete-btn {
+      position: absolute;
+      top: -8px;
+      right: -2px;
+      background: #e74c3c;
+      color: white;
+      border: none;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(231,76,60,0.3);
+    }
+
+    .delete-btn:hover {
+      background: #c0392b;
+    }
+
+    .form-btn-section {
+      position: relative;
+      text-align: left;
+      margin-top: 20px;
+      padding-top: 15px;
+      border-top: 1px solid #eee;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 18px;
+      margin-top: 20px;
+    }
+
+    .dimensions-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 18px;
+    }
+
+    .dimension-group {
+      display: flex;
+      gap: 8px;
+      align-items: end;
+    }
+
+    .dimension-group input {
+      flex: 1;
+    }
+
+    .dimension-group select {
+      width: 100px;
+    }
+
+    label {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 6px;
+      color: #444;
+      font-weight: 500;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: border 0.3s;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: #0bbcd6;
+      box-shadow: 0 0 0 3px rgba(11,188,214,0.1);
+    }
+
+    .type-manual, .glazing-manual, .color-manual {
+      width: 180px !important;
+      margin-top: 8px;
+    }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 20px;
+      padding-top: 15px;
+      border-top: 1px solid #eee;
+    }
+
+    .qty-input {
+      width: 100px;
+    }
+
+    .amount {
+      font-size: 20px;
+      font-weight: bold;
+      color: #2c3e50;
+    }
+
+    /* Print Table Styles */
+    .print-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 30px 0 10px 0;
+      font-size: 13px;
+      display: none; /* Hidden on screen */
+    }
+
+    .print-table th, .print-table td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      vertical-align: top;
+    }
+
+    .print-table th {
+      background: #f0f4f8;
+      text-align: left;
+      font-weight: 600;
+      color: #2c3e50;
+    }
+
+    .print-table .item-details {
+      white-space: pre-wrap;
+      font-size: 13px;
+    }
+
+    .print-table .qty-col {
+      text-align: center;
+      width: 70px;
+    }
+
+    .print-table .sqft-col {
+      text-align: right;
+      width: 110px;
+      font-size: 12px;
+    }
+
+    .print-table .amount-col {
+      text-align: right;
+      width: 110px;
+      font-weight: bold;
+    }
+
+    .print-summary {
+      margin-top: 15px;
+      text-align: right;
+      font-size: 14px;
+      display: none; /* Hidden on screen */
+    }
+
+    .print-summary .extra-line {
+      margin: 6px 0;
+      font-weight: 500;
+    }
+
+    .print-summary .grand-total {
+      font-size: 18px;
+      font-weight: bold;
+      color: #0bbcd6;
+      border-top: 2px solid #0bbcd6;
+      padding-top: 8px;
+      margin-top: 12px;
+    }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 40px;
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 2px solid #ddd;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    .total-box {
+      text-align: right;
+    }
+
+    .total-box label {
+      font-size: 16px;
+      color: #555;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .total-box label[for="grand"] {
+      font-weight: bold;
+      font-size: 20px;
+    }
+
+    .total-box input {
+      font-size: 20px;
+      font-weight: bold;
+      color: #0bbcd6;
+      text-align: right;
+      width: 220px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    .gst-row {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+
+    .action-buttons {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      display: flex;
+      flex-direction: row-reverse;
+      gap: 16px;
+      z-index: 1000;
+    }
+
+    .action-btn {
+      width: 56px;
+      height: 56px;
+      background-color: #0bbcd6;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(11,188,214,0.4);
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .action-btn:hover {
+      transform: translateY(-4px) scale(1.05);
+      box-shadow: 0 12px 28px rgba(11,188,214,0.5);
+    }
+
+    .action-btn svg {
+      width: 26px;
+      height: 26px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .action-btn::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: 70px;
+      background: #333;
+      color: white;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 14px;
+      white-space: nowrap;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    .action-btn:hover::after {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .action-btn::before {
+      content: '';
+      position: absolute;
+      bottom: 60px;
+      width: 10px;
+      height: 10px;
+      background: #333;
+      transform: rotate(45deg);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s;
+    }
+
+    .action-btn:hover::before {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    #downloadBtn { background: #0bbcd6; }
+    #saveBtn { background: #28a745; }
+    #loadBtn { background: #ffc107; color: #212529; }
+
+    .page-number {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 12px;
+      color: #888;
+    }
+
+    .terms-image-page {
+      page-break-before: always;
+      width: 210mm;
+      height: 297mm;
+      margin: 0 auto;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    .terms-image-page img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* ====================== PRINT STYLES ====================== */
+    @media print {
+      body { 
+        background: white; 
+        padding: 0; 
+        margin: 0; 
+      }
+
+      .container { 
+        box-shadow: none; 
+        border-radius: 0; 
+        margin: 0; 
+        padding: 15mm 12mm; 
+        width: 210mm;
+        min-height: 297mm;
+      }
+
+      /* Show only the professional quotation */
+      .header,
+      .project-heading,
+      .print-table,
+      .print-summary,
+      .page-number {
+        display: block !important;
+      }
+
+      .print-table,
+      .print-summary {
+        display: block !important;
+      }
+
+      .terms-image-page {
+        display: block !important;
+        page-break-before: always;
+      }
+
+      .terms-image-page img {
+        object-fit: contain;
+      }
+
+      /* Hide everything else */
+      .add-section, 
+      .dropdown, 
+      .form-btn-section, 
+      .delete-btn, 
+      .project-section,
+      .action-buttons, 
+      .screen-only, 
+      .type-manual, 
+      .glazing-manual, 
+      .color-manual,
+      .gst-toggle-wrapper, 
+      .type-select, 
+      .glazing-select, 
+      .color-select, 
+      .brand-select,
+      .hardware-select, 
+      .dim-unit, 
+      .qty-input, 
+      .rate, 
+      .area,
+      .footer,
+      .forms-area,
+      .form-box {
+        display: none !important;
+      }
+
+      .print-table {
+        display: table !important;
+        font-size: 11pt;
+      }
+
+      .print-table th, .print-table td {
+        border: 1px solid #777;
+      }
+
+      .print-summary {
+        font-size: 12pt;
+      }
+
+      .print-summary .grand-total {
+        font-size: 15pt;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container a4">
+  <div class="header">
+    <div class="logo">
+      <img src="https://raw.githubusercontent.com/pinakasolution/Quotation/main/pinaka_logo.jpg" alt="Logo">
+    </div>
+    <div class="company">
+      <h2>Pinaka Solution</h2>
+      <p>D 315/A, 2nd Gate Industrial Estate,
+       Gokul Road, Hubli – 580030 </p>
+      <p>Email: Pinakasolution@gamil.com<br>
+        Contact: +91 84310 61098 | 84313 11036</p>
+    </div>
+  </div>
+
+  <div class="project-heading" id="projectHeading">Quotation</div>
+
+  <div class="project-section">
+    <label for="projectName">Enter the name of the project</label>
+    <input type="text" id="projectName" placeholder="e.g. Mr. Rajesh Residence, Hubli" autofocus>
+  </div>
+
+  <div class="add-section" id="initialAddSection" style="display: none;">
+    <button class="add-btn" id="addBtn">+ Add Products</button>
+
+    <div class="dropdown" id="dropdown">
+      <div class="product-grid">
+        <div class="product-card" onclick="selectProduct('UPVC')">UPVC</div>
+        <div class="product-card" onclick="selectProduct('Aluminium')">Aluminium</div>
+        <div class="product-card" onclick="selectProduct('Interior')">Interior</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="forms-area" id="formsArea"></div>
+
+  <!-- Print-only Table -->
+  <table class="print-table">
+    <thead>
+      <tr>
+        <th>Item Details</th>
+        <th class="qty-col">Qty</th>
+        <th class="sqft-col">Total Sqft<br><small>(Rate/sqft)</small></th>
+        <th class="amount-col">Total Amount</th>
+      </tr>
+    </thead>
+    <tbody id="printTableBody"></tbody>
+  </table>
+
+  <!-- Print Summary -->
+  <div class="print-summary">
+    <div id="printShipping" style="display:none;">Shipping: <span id="printShippingVal">₹0.00</span></div>
+    <div id="printDiscount" style="display:none;">Discount: <span id="printDiscountVal">₹0.00</span></div>
+    <div id="printGST" style="display:none;">GST (18%): <span id="printGSTVal">₹0.00</span></div>
+    
+    <!-- New summary lines -->
+    <div class="extra-line">Total Products: <span id="printTotalProducts">0</span></div>
+    <div class="extra-line">Total Area: <span id="printTotalArea">0.00</span> sqft</div>
+
+    <div class="grand-total">Grand Total: <span id="printGrandTotal">₹0.00</span></div>
+  </div>
+
+  <div class="footer screen-only" id="footer" style="display: none;">
+    <div class="footer-left">
+      <div class="total-box">
+        <label>Shipping</label>
+        <input id="shipping" type="number" value="0" step="0.01">
+      </div>
+      <div class="total-box">
+        <label>Discount (%)</label>
+        <input id="discount" type="number" value="0" min="0" max="100" step="0.01">
+      </div>
+    </div>
+    <div class="footer-right">
+      <div class="total-box gst-section">
+        <div class="gst-row">
+          <div class="gst-checkbox-wrapper">
+            <input type="checkbox" id="gstToggle" checked>
+          </div>
+          <label class="gst-label">GST (18%)</label>
+        </div>
+        <input id="gst" readonly />
+      </div>
+      <div class="total-box">
+        <label>Grand Total</label>
+        <input id="grand" readonly />
+      </div>
+    </div>
+  </div>
+
+  <div class="page-number"></div>
+</div>
+
+<div class="terms-image-page">
+  <img src="https://raw.githubusercontent.com/pinakasolution/Quotation/main/conditionaccount_pinaka_Finalpage.jpg" alt="Terms and Conditions">
+</div>
+
+<div class="action-buttons">
+  <button class="action-btn" id="downloadBtn" data-tooltip="Download as PDF">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+      <path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+      <path d="M6 14h12v8H6z"/>
+      <circle cx="12" cy="11" r="2"/>
+    </svg>
+  </button>
+
+  <button class="action-btn" id="saveBtn" data-tooltip="Save Quotation">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+      <polyline points="14 2 14 8 20 8"/>
+      <line x1="16" y1="13" x2="8" y2="13"/>
+      <line x1="16" y1="17" x2="8" y2="17"/>
+      <polyline points="10 9 9 9 8 9"/>
+    </svg>
+  </button>
+
+  <button class="action-btn" id="loadBtn" data-tooltip="Load Quotation">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+      <polyline points="17 8 12 3 7 8"/>
+      <line x1="12" y1="3" x2="12" y2="15"/>
+    </svg>
+  </button>
+</div>
+
+<input type="file" id="loadInput" accept=".json" style="display: none;">
+
+<script>
+  const productConfigs = {
+    'UPVC': {
+      typeOptions: [
+        {value: "570", label: "3 Track"},
+        {value: "500", label: "2.5 Track"},
+        {value: "490", label: "2 Track"},
+        {value: "480", label: "Ventilator"},
+        {value: "480", label: "Openable"},
+        {value: "480", label: "Fix"}
+      ],
+      brandOptions: ["UPVC Green Tech"],
+      hasGlazing: false,
+      hasHardware: false
+    },
+    'Aluminium': {
+      typeOptions: [
+        {value: "570", label: "3 Track"},
+        {value: "500", label: "2.5 Track"},
+        {value: "490", label: "2 Track"},
+        {value: "480", label: "Ventilator"},
+        {value: "480", label: "Openable"},
+        {value: "480", label: "Fix"}
+      ],
+      glazingOptions: [
+        {value: "290", label: "Glazing"},
+        {value: "260", label: "ACP Panel"},
+        {value: "260", label: "Domol"}
+      ],
+      brandOptions: ["Jindal Aluminium"],
+      hasHardware: false
+    },
+    'Interior': {
+      typeOptions: [
+        {value: "570", label: "Tv Unit"},
+        {value: "500", label: "Shoe rack / Foyer unit"},
+        {value: "490", label: "Modular kitchen | Wall unit loft"},
+        {value: "490", label: "Crockery Unit"},
+        {value: "490", label: "Pooja Unit"},
+        {value: "490", label: "Partition"},
+        {value: "490", label: "Wall Panelling"},
+        {value: "490", label: "Wardrobe & loft"},
+        {value: "490", label: "Bar Unit"},
+        {value: "490", label: "Home Theatre"},
+        {value: "490", label: "Bed"},
+        {value: "490", label: "Glass Reeling"},
+        {value: "490", label: "SS Reeling"},
+        {value: "490", label: "Glass"},
+        {value: "480", label: "Glazing"}
+      ],
+      brandOptions: ["Greenlam","Century Ply","Merino","Local Interior"],
+      hasGlazing: true,
+      hasHardware: false
+    },
+    'Exterior': {
+      typeOptions: [
+        {value: "570", label: "3 Track"},
+        {value: "500", label: "2.5 Track"},
+        {value: "490", label: "2 Track"},
+        {value: "480", label: "Ventilator"}
+      ],
+      brandOptions: ["Duro","Alstone","Aludecor","Local Exterior"],
+      hasGlazing: true,
+      hasHardware: false
+    }
+  };
+
+  const productListHTML = `
+    <div class="product-grid">
+      <div class="product-card" onclick="selectProduct('UPVC')">UPVC</div>
+      <div class="product-card" onclick="selectProduct('Aluminium')">Aluminium</div>
+    </div>
+  `;
+
+  const projectInput = document.getElementById('projectName');
+  const projectHeading = document.getElementById('projectHeading');
+  const initialAddSection = document.getElementById('initialAddSection');
+  const downloadBtn = document.getElementById('downloadBtn');
+  const saveBtn = document.getElementById('saveBtn');
+  const loadBtn = document.getElementById('loadBtn');
+  const loadInput = document.getElementById('loadInput');
+  const footer = document.getElementById('footer');
+  const gstToggle = document.getElementById('gstToggle');
+  const shippingInput = document.getElementById('shipping');
+  const discountInput = document.getElementById('discount');
+
+  let projectNameEntered = false;
+  let hasProducts = false;
+
+  function updateVisibility() {
+    if (projectNameEntered && hasProducts) {
+      footer.style.display = 'flex';
+      downloadBtn.parentElement.style.display = 'flex';
+      saveBtn.parentElement.style.display = 'flex';
+    } else {
+      footer.style.display = 'none';
+      downloadBtn.parentElement.style.display = 'none';
+      saveBtn.parentElement.style.display = 'none';
+    }
+    loadBtn.parentElement.style.display = 'flex';
+  }
+
+  projectInput.addEventListener('input', function() {
+    const value = this.value.trim();
+    if (value.length > 0) {
+      projectHeading.textContent = value;
+      initialAddSection.style.display = 'block';
+      projectNameEntered = true;
+    } else {
+      projectHeading.textContent = 'Quotation';
+      initialAddSection.style.display = 'none';
+      projectNameEntered = false;
+    }
+    updateVisibility();
+  });
+
+  function hideAllAddButtons() {
+    document.querySelectorAll('.form-btn-section').forEach(section => section.style.display = 'none');
+    document.querySelectorAll('.dropdown.active').forEach(dd => {
+      dd.classList.remove('active');
+      dd.previousElementSibling.classList.remove('active');
+    });
+  }
+
+  function getProductPrefix(product) {
+    switch(product) {
+      case 'UPVC': return 'UPV';
+      case 'Aluminium': return 'ALU';
+      case 'Interior': return 'INT';
+      default: return 'PR';
+    }
+  }
+
+  function renumberProducts() {
+    const forms = document.querySelectorAll('.form-box');
+    forms.forEach((form, index) => {
+      const productName = form.querySelector('h3').textContent.replace('×', '').trim().replace('Product: ', '');
+      const prefix = getProductPrefix(productName);
+      const newCode = prefix + String(index + 1).padStart(2, '0');
+      const codeInput = form.querySelector('input[readonly]');
+      if (codeInput) codeInput.value = newCode;
+    });
+  }
+
+  function updateLastAddButton() {
+    const forms = document.querySelectorAll('.form-box');
+    if (forms.length > 0) {
+      document.querySelectorAll('.form-btn-section').forEach(s => s.style.display = 'none');
+      const lastForm = forms[forms.length - 1];
+      lastForm.querySelector('.form-btn-section').style.display = 'block';
+    }
+  }
+
+  function deleteProduct(formBox) {
+    formBox.remove();
+    renumberProducts();
+    calcTotals();
+    updateLastAddButton();
+    updatePrintTable();
+    updatePrintSummaryExtras();
+
+    hasProducts = document.querySelectorAll('.form-box').length > 0;
+    updateVisibility();
+  }
+
+  function selectProduct(product) {
+    hideAllAddButtons();
+
+    const container = document.getElementById('formsArea');
+    const forms = document.querySelectorAll('.form-box');
+    const nextNumber = forms.length + 1;
+    const prefix = getProductPrefix(product);
+    const code = prefix + String(nextNumber).padStart(2, '0');
+
+    const config = productConfigs[product];
+
+    let brandOptionsHTML = config.brandOptions.map(b => `<option>${b}</option>`).join('');
+    let typeOptionsHTML = `<option value="">Select Type</option>` + 
+      config.typeOptions.map(opt => `<option value="${opt.value}">${opt.label}</option>`).join('');
+
+    let typeHTML = `
+      <div><label>Type</label>
+        <select class="type-select">${typeOptionsHTML}</select>
+        <input type="number" class="type-manual" placeholder="Custom Rate / sqft" step="0.01">
+      </div>`;
+
+    let glazingHTML = '';
+    if (product === 'Aluminium') {
+      let glazingOptionsHTML = `<option value="">Select</option>` +
+        config.glazingOptions.map(opt => `<option value="${opt.value}">${opt.label}</option>`).join('');
+      glazingHTML = `
+        <div><label>Glazing / Panel</label>
+          <select class="glazing-select">${glazingOptionsHTML}</select>
+          <input type="number" class="glazing-manual" placeholder="Custom Rate / sqft" step="0.01">
+        </div>`;
+    } else if (config.hasGlazing) {
+      glazingHTML = `
+        <div><label>Glazing</label>
+          <select class="glazing-select">
+            <option>Clear Glass</option>
+            <option>Frosted Glass</option>
+            <option>Toughened Glass</option>
+          </select>
+        </div>`;
+    }
+
+    let hardwareHTML = config.hasHardware ? `
+      <div><label>Hardware Used</label>
+        <select class="hardware-select">
+          <option>Chrome Track Wool</option>
+          <option>RPF Bearing Hardwares</option>
+        </select>
+      </div>` : '';
+
+    const form = document.createElement('div');
+    form.className = 'form-box';
+    form.innerHTML = `
+      <h3>Product: ${product}<button class="delete-btn" onclick="deleteProduct(this.closest('.form-box'))">×</button></h3>
+      <div class="grid">
+        <div><label>Code</label><input value="${code}" readonly></div>
+      </div>
+
+      <div class="dimensions-row">
+        <div><label>Width</label>
+          <div class="dimension-group">
+            <input type="number" class="w" step="0.1" placeholder="0">
+            <select class="dim-unit"><option value="mm">mm</option><option value="inch">inch</option><option value="feet">feet</option></select>
+          </div>
+        </div>
+        <div><label>Height</label>
+          <div class="dimension-group">
+            <input type="number" class="h" step="0.1" placeholder="0">
+            <select class="dim-unit"><option value="mm">mm</option><option value="inch">inch</option><option value="feet">feet</option></select>
+          </div>
+        </div>
+        <div><label>Total Area (sqft)</label><input class="area" readonly></div>
+      </div>
+
+      <div class="grid">
+        <div><label>Profile Brand</label><select class="brand-select">${brandOptionsHTML}</select></div>
+        ${typeHTML}
+        ${glazingHTML}
+        ${hardwareHTML}
+        <div><label>Profile Color</label>
+          <select class="color-select">
+            <option value="0">White</option>
+            <option value="900">Colour Profile</option>
+          </select>
+          <input type="number" class="color-manual" placeholder="Custom Rate / sqft" step="0.01">
+        </div>
+        <div><label>Rate / Sqft</label><input type="number" class="rate" step="0.01" readonly></div>
+      </div>
+
+      <div class="row">
+        <div><label>Quantity</label><input type="number" class="qty qty-input" value="1" min="1"></div>
+        <div class="amount">Amount ₹ <span class="amountVal">0.00</span></div>
+      </div>
+
+      <div class="form-btn-section">
+        <button class="add-btn" onclick="toggleDropdown(this)">+ Add Another Product</button>
+        <div class="dropdown">${productListHTML}</div>
+      </div>
+    `;
+
+    container.appendChild(form);
+
+    document.querySelectorAll('.form-btn-section').forEach(s => s.style.display = 'none');
+    form.querySelector('.form-btn-section').style.display = 'block';
+
+    const unitSelects = form.querySelectorAll('.dim-unit');
+    unitSelects.forEach(s => s.value = 'mm');
+
+    unitSelects.forEach(select => {
+      select.addEventListener('change', function() {
+        unitSelects.forEach(s => { if (s !== this) s.value = this.value; });
+        calcForm(form);
+      });
+    });
+
+    form.querySelectorAll('.w, .h, .dim-unit, .type-manual, .glazing-manual, .color-manual, .qty')
+      .forEach(el => el.addEventListener('input', () => calcForm(form)));
+
+    hasProducts = true;
+    updateVisibility();
+    calcTotals();
+    updatePrintTable();
+    updatePrintSummaryExtras();
+  }
+
+  function toggleDropdown(btn) {
+    hideAllAddButtons();
+    const section = btn.parentElement;
+    section.style.display = 'block';
+    const dropdown = section.querySelector('.dropdown');
+    btn.classList.toggle('active');
+    dropdown.classList.toggle('active');
+
+    if (dropdown.classList.contains('active')) {
+      const closeHandler = e => {
+        if (!section.contains(e.target)) {
+          btn.classList.remove('active');
+          dropdown.classList.remove('active');
+          document.removeEventListener('click', closeHandler);
+        }
+      };
+      setTimeout(() => document.addEventListener('click', closeHandler), 100);
+    }
+  }
+
+  function convertToMM(value, unit) {
+    if (unit === 'mm') return value;
+    if (unit === 'inch') return value * 25.4;
+    if (unit === 'feet') return value * 304.8;
+    return 0;
+  }
+
+  function calcForm(form) {
+    const unit = form.querySelector('.dim-unit').value;
+    const w = parseFloat(form.querySelector('.w').value) || 0;
+    const h = parseFloat(form.querySelector('.h').value) || 0;
+    const qty = parseFloat(form.querySelector('.qty').value) || 1;
+
+    const w_mm = convertToMM(w, unit);
+    const h_mm = convertToMM(h, unit);
+    const sqft = (w_mm * h_mm) / 92903.04;
+
+    form.querySelector('.area').value = sqft.toFixed(4);
+
+    let rate = 0;
+    ['.type-manual','.glazing-manual','.color-manual'].forEach(sel => {
+      const val = form.querySelector(sel)?.value;
+      if (val && val.trim() !== '') rate += parseFloat(val);
+    });
+
+    form.querySelector('.rate').value = rate.toFixed(2);
+    form.querySelector('.amountVal').textContent = (sqft * rate * qty).toFixed(2);
+
+    calcTotals();
+    updatePrintTable();
+    updatePrintSummaryExtras();
+  }
+
+  function calcTotals() {
+    let subtotal = 0;
+    document.querySelectorAll('.amountVal').forEach(v => subtotal += parseFloat(v.textContent) || 0);
+
+    const shipping = parseFloat(shippingInput.value) || 0;
+    let discountPercent = parseFloat(discountInput.value) || 0;
+    if (discountPercent > 100) discountPercent = 100;
+    const discountAmount = subtotal * (discountPercent / 100);
+
+    const afterDiscount = subtotal - discountAmount + shipping;
+    const gstAmount = gstToggle.checked ? afterDiscount * 0.18 : 0;
+    const grandTotal = afterDiscount + gstAmount;
+
+    document.getElementById('gst').value = gstToggle.checked ? '₹' + gstAmount.toFixed(2) : '₹0.00';
+    document.getElementById('grand').value = '₹' + grandTotal.toFixed(2);
+
+    document.getElementById('printShippingVal').textContent = '₹' + shipping.toFixed(2);
+    document.getElementById('printShipping').style.display = shipping > 0 ? 'block' : 'none';
+
+    document.getElementById('printDiscountVal').textContent = '₹' + discountAmount.toFixed(2);
+    document.getElementById('printDiscount').style.display = discountAmount > 0 ? 'block' : 'none';
+
+    document.getElementById('printGSTVal').textContent = '₹' + gstAmount.toFixed(2);
+    document.getElementById('printGST').style.display = gstAmount > 0 ? 'block' : 'none';
+
+    document.getElementById('printGrandTotal').textContent = '₹' + grandTotal.toFixed(2);
+  }
+
+  // ────────────────────────────────────────────────
+  // NEW FUNCTION: Update Total Products & Total Area
+  // ────────────────────────────────────────────────
+  function updatePrintSummaryExtras() {
+    const forms = document.querySelectorAll('.form-box');
+    let totalProducts = forms.length;
+    let totalArea = 0;
+
+    forms.forEach(form => {
+      const areaStr = form.querySelector('.area').value || '0';
+      totalArea += parseFloat(areaStr) || 0;
+    });
+
+    document.getElementById('printTotalProducts').textContent = totalProducts;
+    document.getElementById('printTotalArea').textContent = totalArea.toFixed(2);
+  }
+
+  function buildPrintRow(form) {
+    const product = form.querySelector('h3').textContent.replace(/×|Product: /g,'').trim();
+    const code = form.querySelector('input[readonly]').value;
+    const w = form.querySelector('.w').value || '0';
+    const h = form.querySelector('.h').value || '0';
+    const unit = form.querySelector('.dim-unit').value;
+    const brand = form.querySelector('.brand-select')?.value || '-';
+    const qty = form.querySelector('.qty').value || '1';
+    const sqft = form.querySelector('.area').value || '0.0000';
+    const rate = form.querySelector('.rate').value || '0.00';
+    const amount = form.querySelector('.amountVal').textContent || '0.00';
+
+    let details = `${product}\nCode: ${code}\nDimensions: ${w} × ${h} ${unit}\nProfile Brand: ${brand}`;
+
+    const addDetail = (label, val) => {
+      if (val && val.trim() !== '' && parseFloat(val) > 0) details += `\n${label}: ₹${val}/sqft`;
+    };
+
+    addDetail('Type Rate', form.querySelector('.type-manual')?.value);
+    addDetail('Glazing/Panel Rate', form.querySelector('.glazing-manual')?.value);
+    addDetail('Color Profile Rate', form.querySelector('.color-manual')?.value);
+
+    return { details, qty, sqft, rate, amount };
+  }
+
+  function updatePrintTable() {
+    const tbody = document.getElementById('printTableBody');
+    tbody.innerHTML = '';
+
+    document.querySelectorAll('.form-box').forEach(form => {
+      const r = buildPrintRow(form);
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td class="item-details"><pre style="margin:0; font-family:inherit; white-space:pre-wrap;">${r.details}</pre></td>
+        <td class="qty-col">${r.qty}</td>
+        <td class="sqft-col">${parseFloat(r.sqft).toFixed(2)} sqft<br><small>₹${r.rate}</small></td>
+        <td class="amount-col">₹${r.amount}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    // Update totals after table is built
+    updatePrintSummaryExtras();
+  }
+
+  shippingInput.addEventListener('input', calcTotals);
+  discountInput.addEventListener('input', calcTotals);
+  gstToggle.addEventListener('change', calcTotals);
+
+  const addBtn = document.getElementById('addBtn');
+  const initialDropdown = document.getElementById('dropdown');
+
+  addBtn.addEventListener('click', e => {
+    e.stopPropagation();
+    addBtn.classList.toggle('active');
+    initialDropdown.classList.toggle('active');
+  });
+
+  document.addEventListener('click', () => {
+    addBtn.classList.remove('active');
+    initialDropdown.classList.remove('active');
+  });
+
+  initialDropdown.addEventListener('click', e => e.stopPropagation());
+
+  function collectQuotationData() {
+    const data = {
+      projectName: document.getElementById('projectName').value.trim(),
+      includeGST: gstToggle.checked,
+      shipping: shippingInput.value || '0',
+      discount: discountInput.value || '0',
+      products: []
+    };
+
+    document.querySelectorAll('.form-box').forEach(form => {
+      data.products.push({
+        type: form.querySelector('h3').textContent.replace(/×|Product: /g,'').trim(),
+        code: form.querySelector('input[readonly]').value,
+        width: form.querySelector('.w').value,
+        height: form.querySelector('.h').value,
+        dimension_unit: form.querySelector('.dim-unit').value,
+        profileBrand: form.querySelector('.brand-select')?.value || '',
+        typeManual: form.querySelector('.type-manual')?.value || '',
+        glazingManual: form.querySelector('.glazing-manual')?.value || '',
+        colorManual: form.querySelector('.color-manual')?.value || '',
+        rate: form.querySelector('.rate').value,
+        qty: form.querySelector('.qty').value
+      });
+    });
+    return data;
+  }
+
+  saveBtn.addEventListener('click', () => {
+    if (!projectNameEntered) return alert('Please enter a project name first!');
+    if (!hasProducts) return alert('Add at least one product before saving!');
+
+    const data = collectQuotationData();
+    const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${data.projectName.replace(/[^a-z0-9]/gi,'_').toLowerCase()}_quotation.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+
+  loadBtn.addEventListener('click', () => loadInput.click());
+
+  loadInput.addEventListener('change', e => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = ev => {
+      try {
+        const data = JSON.parse(ev.target.result);
+        document.getElementById('formsArea').innerHTML = '';
+        document.getElementById('projectName').value = data.projectName || '';
+        projectHeading.textContent = data.projectName || 'Quotation';
+        projectNameEntered = !!data.projectName;
+        initialAddSection.style.display = projectNameEntered ? 'block' : 'none';
+
+        gstToggle.checked = data.includeGST !== undefined ? data.includeGST : true;
+        shippingInput.value = data.shipping || '0';
+        discountInput.value = data.discount || '0';
+
+        data.products.forEach(p => {
+          selectProduct(p.type);
+          const f = document.querySelector('.form-box:last-child');
+          f.querySelector('input[readonly]').value = p.code;
+          f.querySelector('.w').value = p.width || '';
+          f.querySelector('.h').value = p.height || '';
+          f.querySelectorAll('.dim-unit').forEach(s => s.value = p.dimension_unit || 'mm');
+          if (f.querySelector('.brand-select')) f.querySelector('.brand-select').value = p.profileBrand || '';
+          if (f.querySelector('.type-manual')) f.querySelector('.type-manual').value = p.typeManual || '';
+          if (f.querySelector('.glazing-manual')) f.querySelector('.glazing-manual').value = p.glazingManual || '';
+          if (f.querySelector('.color-manual')) f.querySelector('.color-manual').value = p.colorManual || '';
+          f.querySelector('.qty').value = p.qty || '1';
+          calcForm(f);
+        });
+
+        renumberProducts();
+        updateLastAddButton();
+        hasProducts = data.products.length > 0;
+        updateVisibility();
+        calcTotals();
+        updatePrintTable();
+        updatePrintSummaryExtras();
+
+        alert('Quotation loaded successfully!');
+      } catch (err) {
+        alert('Invalid or corrupted JSON file!');
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = '';
+  });
+
+  downloadBtn.addEventListener('click', e => {
+    if (!projectNameEntered) {
+      alert('Please enter a project name before downloading PDF!');
+      return;
+    }
+
+    const name = document.getElementById('projectName').value.trim();
+    const safe = name.replace(/[^a-z0-9]/gi,'_').toLowerCase();
+    const d = new Date();
+    const date = `${String(d.getDate()).padStart(2,'0')}-${String(d.getMonth()+1).padStart(2,'0')}-${d.getFullYear()}`;
+
+    document.title = `${safe}_quotation_${date}.pdf`;
+    window.print();
+
+    setTimeout(() => document.title = 'Quotation Form', 1000);
+  });
+
+  updateVisibility();
+</script>
+</body>
+</html>
