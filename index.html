@@ -271,24 +271,32 @@
       font-weight: 500;
     }
 
-    input, select {
+    input, select, textarea {
       width: 100%;
       padding: 10px;
       border: 1px solid #ccc;
       border-radius: 8px;
       font-size: 14px;
       transition: border 0.3s;
+      box-sizing: border-box;
     }
 
-    input:focus, select:focus {
+    input:focus, select:focus, textarea:focus {
       outline: none;
       border-color: #0bbcd6;
       box-shadow: 0 0 0 3px rgba(11,188,214,0.1);
     }
 
-    .type-manual, .glazing-manual, .color-manual {
+    .type-manual, .glazing-manual {
       width: 180px !important;
       margin-top: 8px;
+    }
+
+    .comment-box {
+      margin-top: 8px;
+      resize: vertical;
+      min-height: 80px;
+      font-size: 13px;
     }
 
     .row {
@@ -310,13 +318,13 @@
       color: #2c3e50;
     }
 
-    /* Print Table Styles */
+   
     .print-table {
       width: 100%;
       border-collapse: collapse;
       margin: 30px 0 10px 0;
       font-size: 13px;
-      display: none; /* Hidden on screen */
+      display: none; 
     }
 
     .print-table th, .print-table td {
@@ -358,7 +366,7 @@
       margin-top: 15px;
       text-align: right;
       font-size: 14px;
-      display: none; /* Hidden on screen */
+      display: none; 
     }
 
     .print-summary .extra-line {
@@ -533,7 +541,6 @@
       display: block;
     }
 
-    /* ====================== PRINT STYLES ====================== */
     @media print {
       body { 
         background: white; 
@@ -550,7 +557,6 @@
         min-height: 297mm;
       }
 
-      /* Show only the professional quotation */
       .header,
       .project-heading,
       .print-table,
@@ -573,7 +579,6 @@
         object-fit: contain;
       }
 
-      /* Hide everything else */
       .add-section, 
       .dropdown, 
       .form-btn-section, 
@@ -583,16 +588,15 @@
       .screen-only, 
       .type-manual, 
       .glazing-manual, 
-      .color-manual,
+      .comment-box,
       .gst-toggle-wrapper, 
       .type-select, 
       .glazing-select, 
-      .color-select, 
       .brand-select,
       .hardware-select, 
       .dim-unit, 
       .qty-input, 
-      .rate, 
+      .rate,
       .area,
       .footer,
       .forms-area,
@@ -656,7 +660,6 @@
 
   <div class="forms-area" id="formsArea"></div>
 
-  <!-- Print-only Table -->
   <table class="print-table">
     <thead>
       <tr>
@@ -668,14 +671,12 @@
     </thead>
     <tbody id="printTableBody"></tbody>
   </table>
-
-  <!-- Print Summary -->
+ 
   <div class="print-summary">
     <div id="printShipping" style="display:none;">Shipping: <span id="printShippingVal">₹0.00</span></div>
     <div id="printDiscount" style="display:none;">Discount: <span id="printDiscountVal">₹0.00</span></div>
     <div id="printGST" style="display:none;">GST (18%): <span id="printGSTVal">₹0.00</span></div>
-    
-    <!-- New summary lines -->
+   
     <div class="extra-line">Total Products: <span id="printTotalProducts">0</span></div>
     <div class="extra-line">Total Area: <span id="printTotalArea">0.00</span> sqft</div>
 
@@ -961,6 +962,32 @@
         </select>
       </div>` : '';
 
+    let brandHTML = '';
+    let commentHTML = '';
+
+    if (product === 'Interior') {
+      brandHTML = `
+        <div><label>Profile Brand</label>
+          <input type="text" class="brand-manual" placeholder="Enter brand name">
+        </div>`;
+      commentHTML = `
+        <div><label>Remarks / Comment (max 200 chars)</label>
+          <textarea class="comment-box" maxlength="200" placeholder="Any special notes, requirements, etc..."></textarea>
+        </div>`;
+    } else {
+
+      brandHTML = `
+        <div><label>Profile Brand</label><select class="brand-select">${brandOptionsHTML}</select></div>`;
+      commentHTML = `
+        <div><label>Profile Color</label>
+          <select class="color-select">
+            <option value="0">White</option>
+            <option value="900">Colour Profile</option>
+          </select>
+          <input type="number" class="color-manual" placeholder="Custom Rate / sqft" step="0.01">
+        </div>`;
+    }
+
     const form = document.createElement('div');
     form.className = 'form-box';
     form.innerHTML = `
@@ -986,17 +1013,11 @@
       </div>
 
       <div class="grid">
-        <div><label>Profile Brand</label><select class="brand-select">${brandOptionsHTML}</select></div>
+        ${brandHTML}
         ${typeHTML}
         ${glazingHTML}
         ${hardwareHTML}
-        <div><label>Profile Color</label>
-          <select class="color-select">
-            <option value="0">White</option>
-            <option value="900">Colour Profile</option>
-          </select>
-          <input type="number" class="color-manual" placeholder="Custom Rate / sqft" step="0.01">
-        </div>
+        ${commentHTML}
         <div><label>Rate / Sqft</label><input type="number" class="rate" step="0.01" readonly></div>
       </div>
 
@@ -1026,8 +1047,14 @@
       });
     });
 
-    form.querySelectorAll('.w, .h, .dim-unit, .type-manual, .glazing-manual, .color-manual, .qty')
+    form.querySelectorAll('.w, .h, .dim-unit, .type-manual, .glazing-manual, .qty, .brand-manual, .comment-box')
       .forEach(el => el.addEventListener('input', () => calcForm(form)));
+
+
+    const colorManual = form.querySelector('.color-manual');
+    if (colorManual) {
+      colorManual.addEventListener('input', () => calcForm(form));
+    }
 
     hasProducts = true;
     updateVisibility();
@@ -1117,9 +1144,6 @@
     document.getElementById('printGrandTotal').textContent = '₹' + grandTotal.toFixed(2);
   }
 
-  // ────────────────────────────────────────────────
-  // NEW FUNCTION: Update Total Products & Total Area
-  // ────────────────────────────────────────────────
   function updatePrintSummaryExtras() {
     const forms = document.querySelectorAll('.form-box');
     let totalProducts = forms.length;
@@ -1140,13 +1164,25 @@
     const w = form.querySelector('.w').value || '0';
     const h = form.querySelector('.h').value || '0';
     const unit = form.querySelector('.dim-unit').value;
-    const brand = form.querySelector('.brand-select')?.value || '-';
     const qty = form.querySelector('.qty').value || '1';
     const sqft = form.querySelector('.area').value || '0.0000';
     const rate = form.querySelector('.rate').value || '0.00';
     const amount = form.querySelector('.amountVal').textContent || '0.00';
 
-    let details = `${product}\nCode: ${code}\nDimensions: ${w} × ${h} ${unit}\nProfile Brand: ${brand}`;
+    let brandText = '';
+    let extraDetail = '';
+
+    if (product === 'Interior') {
+      brandText = form.querySelector('.brand-manual')?.value?.trim() || '-';
+      extraDetail = form.querySelector('.comment-box')?.value?.trim() || '';
+    } else {
+      brandText = form.querySelector('.brand-select')?.value || '-';
+      extraDetail = form.querySelector('.color-manual')?.value 
+        ? `Colour Profile Rate: ₹${form.querySelector('.color-manual').value}/sqft` 
+        : (form.querySelector('.color-select')?.value === "900" ? "Colour Profile" : "White");
+    }
+
+    let details = `${product}\nCode: ${code}\nDimensions: ${w} × ${h} ${unit}\nProfile Brand: ${brandText}`;
 
     const addDetail = (label, val) => {
       if (val && val.trim() !== '' && parseFloat(val) > 0) details += `\n${label}: ₹${val}/sqft`;
@@ -1154,7 +1190,10 @@
 
     addDetail('Type Rate', form.querySelector('.type-manual')?.value);
     addDetail('Glazing/Panel Rate', form.querySelector('.glazing-manual')?.value);
-    addDetail('Color Profile Rate', form.querySelector('.color-manual')?.value);
+
+    if (extraDetail) {
+      details += `\n${extraDetail}`;
+    }
 
     return { details, qty, sqft, rate, amount };
   }
@@ -1175,7 +1214,6 @@
       tbody.appendChild(tr);
     });
 
-    // Update totals after table is built
     updatePrintSummaryExtras();
   }
 
@@ -1209,19 +1247,29 @@
     };
 
     document.querySelectorAll('.form-box').forEach(form => {
-      data.products.push({
-        type: form.querySelector('h3').textContent.replace(/×|Product: /g,'').trim(),
+      const productType = form.querySelector('h3').textContent.replace(/×|Product: /g,'').trim();
+      const entry = {
+        type: productType,
         code: form.querySelector('input[readonly]').value,
         width: form.querySelector('.w').value,
         height: form.querySelector('.h').value,
         dimension_unit: form.querySelector('.dim-unit').value,
-        profileBrand: form.querySelector('.brand-select')?.value || '',
-        typeManual: form.querySelector('.type-manual')?.value || '',
-        glazingManual: form.querySelector('.glazing-manual')?.value || '',
-        colorManual: form.querySelector('.color-manual')?.value || '',
-        rate: form.querySelector('.rate').value,
         qty: form.querySelector('.qty').value
-      });
+      };
+
+      if (productType === 'Interior') {
+        entry.profileBrand = form.querySelector('.brand-manual')?.value || '';
+        entry.comment = form.querySelector('.comment-box')?.value || '';
+      } else {
+        entry.profileBrand = form.querySelector('.brand-select')?.value || '';
+        entry.typeManual = form.querySelector('.type-manual')?.value || '';
+        entry.glazingManual = form.querySelector('.glazing-manual')?.value || '';
+        entry.colorManual = form.querySelector('.color-manual')?.value || '';
+      }
+
+      entry.rate = form.querySelector('.rate').value;
+
+      data.products.push(entry);
     });
     return data;
   }
@@ -1267,11 +1315,18 @@
           f.querySelector('.w').value = p.width || '';
           f.querySelector('.h').value = p.height || '';
           f.querySelectorAll('.dim-unit').forEach(s => s.value = p.dimension_unit || 'mm');
-          if (f.querySelector('.brand-select')) f.querySelector('.brand-select').value = p.profileBrand || '';
-          if (f.querySelector('.type-manual')) f.querySelector('.type-manual').value = p.typeManual || '';
-          if (f.querySelector('.glazing-manual')) f.querySelector('.glazing-manual').value = p.glazingManual || '';
-          if (f.querySelector('.color-manual')) f.querySelector('.color-manual').value = p.colorManual || '';
           f.querySelector('.qty').value = p.qty || '1';
+
+          if (p.type === 'Interior') {
+            if (f.querySelector('.brand-manual')) f.querySelector('.brand-manual').value = p.profileBrand || '';
+            if (f.querySelector('.comment-box')) f.querySelector('.comment-box').value = p.comment || '';
+          } else {
+            if (f.querySelector('.brand-select')) f.querySelector('.brand-select').value = p.profileBrand || '';
+            if (f.querySelector('.type-manual')) f.querySelector('.type-manual').value = p.typeManual || '';
+            if (f.querySelector('.glazing-manual')) f.querySelector('.glazing-manual').value = p.glazingManual || '';
+            if (f.querySelector('.color-manual')) f.querySelector('.color-manual').value = p.colorManual || '';
+          }
+
           calcForm(f);
         });
 
