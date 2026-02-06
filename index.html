@@ -714,8 +714,9 @@
   <div class="page-number"></div>
 </div>
 
-<div class="terms-image-page">
-  <img src="https://raw.githubusercontent.com/pinakasolution/Quotation/main/conditionaccount_pinaka_Finalpage.jpg" alt="Terms and Conditions">
+<!-- Conditional terms & conditions page -->
+<div class="terms-image-page" id="termsPage">
+  <img id="termsImage" src="https://raw.githubusercontent.com/pinakasolution/Quotation/main/conditionaccount_pinaka_Finalpage.jpg" alt="Terms and Conditions">
 </div>
 
 <div class="action-buttons">
@@ -819,7 +820,6 @@
     <div class="product-grid">
       <div class="product-card" onclick="selectProduct('UPVC')">UPVC</div>
       <div class="product-card" onclick="selectProduct('Aluminium')">Aluminium</div>
-      <div class="product-card" onclick="selectProduct('Interior')">Interior</div>
     </div>
   `;
 
@@ -834,6 +834,7 @@
   const gstToggle = document.getElementById('gstToggle');
   const shippingInput = document.getElementById('shipping');
   const discountInput = document.getElementById('discount');
+  const termsImage = document.getElementById('termsImage');
 
   let projectNameEntered = false;
   let hasProducts = false;
@@ -849,6 +850,21 @@
       saveBtn.parentElement.style.display = 'none';
     }
     loadBtn.parentElement.style.display = 'flex';
+  }
+
+  function updateTermsImage() {
+    const forms = document.querySelectorAll('.form-box');
+    const products = Array.from(forms).map(f => 
+      f.querySelector('h3').textContent.replace('×', '').trim().replace('Product: ', '')
+    );
+
+    const onlyInterior = products.length > 0 && products.every(p => p === 'Interior');
+
+    if (onlyInterior) {
+      termsImage.src = "https://raw.githubusercontent.com/pinakasolution/Test/main/Interior.jpg";
+    } else {
+      termsImage.src = "https://raw.githubusercontent.com/pinakasolution/Quotation/main/conditionaccount_pinaka_Finalpage.jpg";
+    }
   }
 
   projectInput.addEventListener('input', function() {
@@ -909,6 +925,7 @@
     updateLastAddButton();
     updatePrintTable();
     updatePrintSummaryExtras();
+    updateTermsImage();
 
     hasProducts = document.querySelectorAll('.form-box').length > 0;
     updateVisibility();
@@ -972,8 +989,8 @@
           <input type="text" class="brand-manual" placeholder="Enter brand name">
         </div>`;
       commentHTML = `
-        <div><label>Note</label>
-          <textarea class="comment-box" maxlength="200" placeholder="Any requirements notes,  etc..."></textarea>
+        <div><label>Remarks / Comment (max 200 chars)</label>
+          <textarea class="comment-box" maxlength="200" placeholder="Any special notes, requirements, etc..."></textarea>
         </div>`;
     } else {
 
@@ -1062,6 +1079,7 @@
     calcTotals();
     updatePrintTable();
     updatePrintSummaryExtras();
+    updateTermsImage();
   }
 
   function toggleDropdown(btn) {
@@ -1338,6 +1356,7 @@
         calcTotals();
         updatePrintTable();
         updatePrintSummaryExtras();
+        updateTermsImage();
 
         alert('Quotation loaded successfully!');
       } catch (err) {
